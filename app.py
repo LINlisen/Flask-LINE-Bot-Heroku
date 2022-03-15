@@ -6,7 +6,7 @@ from flask import Flask, abort, request
 # https://github.com/line/line-bot-sdk-python
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,PostbackAction,ButtonsTemplate
 
 app = Flask(__name__)
 
@@ -34,7 +34,36 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
-
+    if get_message == '開始問答':
+        try:
+            buttons_template_message = TemplateSendMessage(
+                alt_text='Buttons template',
+                template=ButtonsTemplate(
+                    thumbnail_image_url='https://example.com/image.jpg',
+                    title='問題一',
+                    text='請問數位系總共有幾個攤位',
+                    actions=[
+                        PostbackAction(
+                            label='5',
+                            display_text='5',
+                            data='答錯'
+                        ),
+                        PostbackAction(
+                            label='11',
+                            display_text='11',
+                            data='答錯'
+                        ),
+                        PostbackAction(
+                            label='13',
+                            display_text='13',
+                            data='答對'
+                        ),
+                    ]
+                )
+            )
+            line_bot_api.reply_message(event.reply_token,buttons_template_message)
+        except:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
     # Send To Line
-    reply = TextSendMessage(text=f"{get_message}")
-    line_bot_api.reply_message(event.reply_token, reply)
+    # reply = TextSendMessage(text=f"{get_message}")
+    # line_bot_api.reply_message(event.reply_token, reply)
