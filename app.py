@@ -33,7 +33,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    get_message = event.message.text
+    get_message = event.message.text+'hi'
 
     # Send To Line
     reply = TextSendMessage(text=f"{get_message}")
