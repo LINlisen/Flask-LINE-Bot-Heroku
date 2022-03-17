@@ -84,7 +84,7 @@ def handle_postback(event):
     global count
     if(get_postback == '答對'):
         try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'))
+            #line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'))
             count= count + 1
             print(count)
             next_templete_button=Starting_Qusetion(count)
