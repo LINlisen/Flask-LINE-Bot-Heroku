@@ -11,7 +11,8 @@ import json
 
 with open("/app/question.json") as f:
     q = json.load(f)
-
+with open("/app/data.json") as g:
+    s = json.load(g)
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
@@ -71,7 +72,9 @@ def handle_message(event):
     get_message = event.message.text
     global count
     if get_message == '開始問答':
-        templete_button=Starting_Qusetion(count)
+        with open("data.json") as g:
+                s = json.load(g)
+        templete_button=Starting_Qusetion(s['score'])
         try:
             line_bot_api.reply_message(event.reply_token,templete_button) 
         except:
@@ -82,7 +85,7 @@ def handle_postback(event):
     get_postback = event.postback.data
     print(get_postback)
     global count
-    if(count==2):
+    if(s['score']==2):
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
         except:
@@ -90,8 +93,12 @@ def handle_postback(event):
     if(get_postback == '答對'):
         try:
             count= count + 1
-            print(count)
-            next_templete_button=Starting_Qusetion(count)
+            dict={"score":count}
+            with open("data.json",'w',encoding='utf-8') as h:
+                json.dump(dict, h,ensure_ascii=False)
+            with open("data.json") as g:
+                s = json.load(g)
+            next_templete_button=Starting_Qusetion(s['score'])
             print(next_templete_button)
             line_bot_api.reply_message(event.reply_token,next_templete_button) 
         except:
@@ -99,8 +106,6 @@ def handle_postback(event):
 
     else:
         try:
-            same_templete_button=Starting_Qusetion(count)
-            print(same_templete_button)
             line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'! 請重新點擊開始答題')) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
