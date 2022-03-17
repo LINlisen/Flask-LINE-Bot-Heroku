@@ -69,8 +69,8 @@ def Starting_Qusetion(q_num):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
+    global count
     if get_message == '開始問答':
-        global count
         templete_button=Starting_Qusetion(count)
         try:
             line_bot_api.reply_message(event.reply_token,templete_button) 
@@ -81,10 +81,10 @@ def handle_message(event):
 def handle_postback(event):
     get_postback = event.postback.data
     print(get_postback)
+    global count
     if(get_postback == '答對'):
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'))
-            global count
             count= count + 1
             print(count)
             templete_button=Starting_Qusetion(count)
@@ -95,7 +95,6 @@ def handle_postback(event):
     else:
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'!'))
-            global count
             templete_button=Starting_Qusetion(count)
             line_bot_api.reply_message(event.reply_token,templete_button) 
         except:
