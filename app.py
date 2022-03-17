@@ -1,8 +1,4 @@
 import os
-
-import string
-from tokenize import String
-
 from flask import Flask, abort, request
 
 # https://github.com/line/line-bot-sdk-python
@@ -45,7 +41,7 @@ def Starting_Qusetion(q_num):
                     alt_text='Buttons template',
                     template=ButtonsTemplate(
                         thumbnail_image_url='https://example.com/image.jpg',
-                        title='問題'+String(q_num+1),
+                        title='問題'+str(q_num+1),
                         text=q[q_num]['text'],
                         actions=[
                             PostbackAction(

@@ -1,6 +1,2 @@
-import json
-
-from sqlalchemy import false
-with open("Flask-LINE-Bot-Heroku/question.json") as f:
-    q = json.load(f)
-    print(q[0]['answer'][0]['label'])
+q_num=0
+print('問題'+str(q_num+1))
