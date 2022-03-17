@@ -76,7 +76,7 @@ def handle_message(event):
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
         
-@handler.add(PostbackEvent, message=TextMessage)
+@handler.add(PostbackEvent)
 def handle_postback(event):
     get_postback = event.postback.data
     if(get_postback == '答對'):
