@@ -79,6 +79,8 @@ def handle_message(event):
 @handler.add(PostbackEvent)
 def handle_postback(event):
     get_postback = event.postback.data
+    print(get_postback)
+    line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback))
     if(get_postback == '答對'):
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='恭喜答對！'))
