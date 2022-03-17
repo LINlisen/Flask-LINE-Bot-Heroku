@@ -82,6 +82,11 @@ def handle_postback(event):
     get_postback = event.postback.data
     print(get_postback)
     global count
+    if(count==2):
+        try:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
+        except:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
     if(get_postback == '答對'):
         try:
             count= count + 1
@@ -99,8 +104,4 @@ def handle_postback(event):
             line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'! 請重新點擊開始答題')) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
-    if(count==2):
-        try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
-        except:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
+    
