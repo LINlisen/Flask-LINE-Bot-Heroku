@@ -79,25 +79,25 @@ def handle_message(event):
     if get_message == '開始問答':
         Starting_Qusetion(count)
 
-@handler.add(PostbackAction, message=PostbackAction)
-def handle_postback(event):
-    get_postback = event.postback.data
-    if(get_postback == '答對'):
-        try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='恭喜答對！'))
-            count+=1
-            Starting_Qusetion(count)
-        except:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
+# @handler.add(PostbackAction, message=PostbackAction)
+# def handle_postback(event):
+#     get_postback = event.postback.data
+#     if(get_postback == '答對'):
+#         try:
+#             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='恭喜答對！'))
+#             count+=1
+#             Starting_Qusetion(count)
+#         except:
+#             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
-    else:
-        try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='答錯！'))
-            Starting_Qusetion(count)
-        except:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
-    if(count==2):
-        try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='獲得獎勵！'))
-        except:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
+#     else:
+#         try:
+#             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='答錯！'))
+#             Starting_Qusetion(count)
+#         except:
+#             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
+#     if(count==2):
+#         try:
+#             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='獲得獎勵！'))
+#         except:
+#             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
