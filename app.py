@@ -1,6 +1,5 @@
 import os
-from datetime import datetime
-from random import Random
+
 import string
 from tokenize import String
 
@@ -22,8 +21,6 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
 
-nouse = Random.randrange(0, 4)
-print(nouse)
 count = 0
 
 @app.route("/", methods=["GET", "POST"])
