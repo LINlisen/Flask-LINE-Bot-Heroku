@@ -72,7 +72,7 @@ def handle_message(event):
     if get_message == '開始問答':
         templete_button=Starting_Qusetion(count)
         try:
-            line_bot_api.reply_message(event.reply_token,TemplateSendMessage(template=templete_button)) 
+            line_bot_api.reply_message(event.reply_token,TemplateSendMessage(templete_button)) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
         
@@ -84,7 +84,7 @@ def handle_postback(event):
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='恭喜答對！'))
             count+=1
             templete_button=Starting_Qusetion(count)
-            line_bot_api.reply_message(event.reply_token,TemplateSendMessage(template=templete_button)) 
+            line_bot_api.reply_message(event.reply_token,TemplateSendMessage(templete_button)) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
@@ -92,7 +92,7 @@ def handle_postback(event):
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='答錯！'))
             templete_button=Starting_Qusetion(count)
-            line_bot_api.reply_message(event.reply_token,TemplateSendMessage(template=templete_button)) 
+            line_bot_api.reply_message(event.reply_token,TemplateSendMessage(templete_button)) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
     if(count==2):
