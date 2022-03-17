@@ -1,5 +1,8 @@
 import os
 from datetime import datetime
+from random import Random
+import string
+from tokenize import String
 
 from flask import Flask, abort, request
 
@@ -8,11 +11,20 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,PostbackAction,ButtonsTemplate
 
+import json
+
+from sqlalchemy import false
+with open("Flask-LINE-Bot-Heroku/question.json") as f:
+    q = json.load(f)
+
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
 
+nouse = Random.randrange(0, 4)
+print(nouse)
+count = 0
 
 @app.route("/", methods=["GET", "POST"])
 def callback():
@@ -29,39 +41,63 @@ def callback():
             abort(400)
 
         return "OK"
+    
+
+def Starting_Qusetion(q_num):
+    buttons_template_message = TemplateSendMessage(
+                    alt_text='Buttons template',
+                    template=ButtonsTemplate(
+                        thumbnail_image_url='https://example.com/image.jpg',
+                        title='問題'+String(q_num+1),
+                        text=q[q_num]['text'],
+                        actions=[
+                            PostbackAction(
+                                label=q[q_num]['answer'][0]['label'],
+                                display_text=q[q_num]['answer'][0]['label'],
+                                data=q[q_num]['answer'][0]['data']
+                            ),
+                            PostbackAction(
+                                label=q[q_num]['answer'][1]['label'],
+                                display_text=q[q_num]['answer'][1]['label'],
+                                data=q[q_num]['answer'][1]['data']
+                            ),
+                            PostbackAction(
+                                label=q[q_num]['answer'][1]['label'],
+                                display_text=q[q_num]['answer'][1]['label'],
+                                data=q[q_num]['answer'][1]['data']
+                            ),
+                        ]
+                    )
+                )    
+                
+
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
     if get_message == '開始問答':
+        Starting_Qusetion(count)
+
+@handler.add(PostbackAction, message=PostbackAction)
+def handle_postback(event):
+    get_postback = event.postback.data
+    if(get_postback == '答對'):
         try:
-            buttons_template_message = TemplateSendMessage(
-                alt_text='Buttons template',
-                template=ButtonsTemplate(
-                    thumbnail_image_url='https://example.com/image.jpg',
-                    title='問題一',
-                    text='請問數位系總共有幾個攤位',
-                    actions=[
-                        PostbackAction(
-                            label='5',
-                            display_text='5',
-                            data='答錯'
-                        ),
-                        PostbackAction(
-                            label='11',
-                            display_text='11',
-                            data='答錯'
-                        ),
-                        PostbackAction(
-                            label='13',
-                            display_text='13',
-                            data='答對'
-                        ),
-                    ]
-                )
-            )
-            line_bot_api.reply_message(event.reply_token,buttons_template_message)
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='恭喜答對！'))
+            count+=1
+            Starting_Qusetion(count)
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
+    else:
+        try:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='答錯！'))
+            Starting_Qusetion(count)
+        except:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
+    if(count==2):
+        try:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='獲得獎勵！'))
+        except:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
