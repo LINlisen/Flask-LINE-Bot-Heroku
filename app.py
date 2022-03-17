@@ -14,7 +14,7 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSe
 import json
 
 
-with open("Flask-LINE-Bot-Heroku/question.json") as f:
+with open("/app/question.json") as f:
     q = json.load(f)
 
 app = Flask(__name__)
