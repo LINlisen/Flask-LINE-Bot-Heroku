@@ -87,16 +87,18 @@ def handle_postback(event):
             line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'))
             count= count + 1
             print(count)
-            templete_button=Starting_Qusetion(count)
-            line_bot_api.reply_message(event.reply_token,templete_button) 
+            next_templete_button=Starting_Qusetion(count)
+            print(next_templete_button)
+            line_bot_api.reply_message(event.reply_token,next_templete_button) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
     else:
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'!'))
-            templete_button=Starting_Qusetion(count)
-            line_bot_api.reply_message(event.reply_token,templete_button) 
+            same_templete_button=Starting_Qusetion(count)
+            print(same_templete_button)
+            line_bot_api.reply_message(event.reply_token,same_templete_button) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
     if(count==2):
