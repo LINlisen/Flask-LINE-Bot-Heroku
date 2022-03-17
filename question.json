@@ -1,19 +1,19 @@
 [
     {   
         "thumbnail_image_url":"https://example.com/image.jpg",
-        "text":"請問數位系總共有幾個攤位",
+        "text":"請問我們攤位的主題是什麼？ ",
         "answer":
         [
             {
-                "label":"8",
+                "label":"但是我卡Bug拉!",
                 "data":"答錯"
             },
             {
-                "label":"9",
+                "label":"彈是我卡Bug了!",
                 "data":"答對"
             },
             {
-                "label":"10",
+                "label":"彈是我過Bug拉!",
                 "data":"答錯"
             }
         ]
