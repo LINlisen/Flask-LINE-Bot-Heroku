@@ -80,10 +80,9 @@ def handle_message(event):
 def handle_postback(event):
     get_postback = event.postback.data
     print(get_postback)
-    line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback))
     if(get_postback == '答對'):
         try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='恭喜答對！'))
+            line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'))
             count+=1
             templete_button=Starting_Qusetion(count)
             line_bot_api.reply_message(event.reply_token,templete_button) 
@@ -92,13 +91,13 @@ def handle_postback(event):
 
     else:
         try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='答錯！'))
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'!'))
             templete_button=Starting_Qusetion(count)
             line_bot_api.reply_message(event.reply_token,templete_button) 
         except:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
+            line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
     if(count==2):
         try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='獲得獎勵！'))
+            line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
         except:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
+            line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
