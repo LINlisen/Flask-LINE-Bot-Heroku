@@ -85,6 +85,8 @@ def handle_postback(event):
     get_postback = event.postback.data
     print(get_postback)
     global count
+    with open("data.json") as g:
+                s = json.load(g)
     if(s['score']==2):
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
