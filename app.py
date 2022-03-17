@@ -18,7 +18,7 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
 
-count = 0
+
 
 @app.route("/", methods=["GET", "POST"])
 def callback():
@@ -70,7 +70,6 @@ def Starting_Qusetion(q_num):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
-    global count
     if get_message == '開始問答':
         with open("data.json") as g:
                 s = json.load(g)
@@ -84,7 +83,6 @@ def handle_message(event):
 def handle_postback(event):
     get_postback = event.postback.data
     print(get_postback)
-    global count
     with open("data.json") as g:
                 s = json.load(g)
     if(s['score']==2):
@@ -92,10 +90,9 @@ def handle_postback(event):
             line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
-    if(get_postback == '答對'):
+    if(get_postback == '答對' and s['score']!=2):
         try:
-            count= count + 1
-            dict={"score":count}
+            dict={"score":s['score']+1}
             with open("data.json",'w',encoding='utf-8') as h:
                 json.dump(dict, h,ensure_ascii=False)
             with open("data.json") as g:
