@@ -4,7 +4,7 @@ from flask import Flask, abort, request
 # https://github.com/line/line-bot-sdk-python
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,PostbackAction,ButtonsTemplate
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,PostbackAction,ButtonsTemplate,PostbackEvent
 
 import json
 
@@ -55,9 +55,9 @@ def Starting_Qusetion(q_num):
                                 data=q[q_num]['answer'][1]['data']
                             ),
                             PostbackAction(
-                                label=q[q_num]['answer'][1]['label'],
-                                display_text=q[q_num]['answer'][1]['label'],
-                                data=q[q_num]['answer'][1]['data']
+                                label=q[q_num]['answer'][2]['label'],
+                                display_text=q[q_num]['answer'][2]['label'],
+                                data=q[q_num]['answer'][2]['data']
                             ),
                         ]
                     )
@@ -76,7 +76,7 @@ def handle_message(event):
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
         
-@handler.add(PostbackAction, message=PostbackAction)
+@handler.add(PostbackEvent, message=TextMessage)
 def handle_postback(event):
     get_postback = event.postback.data
     if(get_postback == '答對'):
