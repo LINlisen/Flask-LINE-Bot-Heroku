@@ -83,22 +83,22 @@ def handle_postback(event):
     print(get_postback)
     global count
     if(get_postback == '答對'):
-        line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'))
+        #line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'))
         try:
             count= count + 1
             print(count)
             next_templete_button=Starting_Qusetion(count)
             print(next_templete_button)
-            line_bot_api.reply_message(event.reply_token,next_templete_button) 
+            line_bot_api.reply_message(event.reply_token,TextSendMessage('恭喜'+get_postback+'!'),next_templete_button) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
     else:
-        line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'!'))
+        #line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'!'))
         try:
             same_templete_button=Starting_Qusetion(count)
             print(same_templete_button)
-            line_bot_api.reply_message(event.reply_token,same_templete_button) 
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'!'),same_templete_button) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
     if(count==2):
