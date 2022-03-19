@@ -17,12 +17,17 @@ app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
-
+get_user_api = LineBotApi('OG0zc72VvgO/3lMsXVUAV7+F6aNDM0htYXZO8mdvWc/iV2X9HJn2NMO1l7g4hWZ0pM52quGhggQ8ahT7o/pGbxXGLwq3qQz0pX0fx91wJUtWf/vKpxeUHlpkgGxICXKj4zHotkzQayzIyzxdALwXIAdB04t89/1O/w1cDnyilFU=')
 try:
-    profile = line_bot_api.get_profile('<user_id>')
+    profile = get_user_api.get_profile('<user_id>')
+    print(profile)
 except LineBotApiError as e:
     print(e)
-
+if(profile not in s.keys()):
+    new_user={"{profile}":0}
+    s.update(new_user)
+    with open("/app/data.json",'w',encoding='utf-8') as h:
+        json.dump(s, h,ensure_ascii=False)
 @app.route("/", methods=["GET", "POST"])
 def callback():
 
@@ -72,17 +77,22 @@ def Starting_Qusetion(q_num):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    try:
+        profile = get_user_api.get_profile('<user_id>')
+        print(profile)
+    except LineBotApiError as e:
+        print(e)
     get_message = event.message.text
     if get_message == '開始問答':
-        with open("data.json") as g:
+        with open("/app/data.json") as g:
                 s = json.load(g)
-        if(s['score']==2):
+        if(s[profile]==2):
             try:
                 line_bot_api.reply_message(event.reply_token,TextSendMessage('已獲得獎勵！')) 
             except:
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
         else:
-            templete_button=Starting_Qusetion(s['score'])
+            templete_button=Starting_Qusetion(s[profile])
             try:
                 line_bot_api.reply_message(event.reply_token,templete_button) 
             except:
@@ -90,23 +100,28 @@ def handle_message(event):
         
 @handler.add(PostbackEvent)
 def handle_postback(event):
+    try:
+        profile = get_user_api.get_profile('<user_id>')
+        print(profile)
+    except LineBotApiError as e:
+        print(e)
     get_postback = event.postback.data
     print(get_postback)
-    with open("data.json") as g:
+    with open("/app/data.json") as g:
                 s = json.load(g)
-    if(s['score']==2):
+    if(s[profile]==2):
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
-    if(get_postback == '答對' and s['score']!=2):
+    if(get_postback == '答對' and s[profile]!=2):
         try:
-            dict={"score":s['score']+1}
-            with open("data.json",'w',encoding='utf-8') as h:
+            dict={profile:s[profile]+1}
+            with open("/app/data.json",'w',encoding='utf-8') as h:
                 json.dump(dict, h,ensure_ascii=False)
-            with open("data.json") as g:
+            with open("/app/data.json") as g:
                 s = json.load(g)
-            next_templete_button=Starting_Qusetion(s['score'])
+            next_templete_button=Starting_Qusetion(s[profile])
             print(next_templete_button)
             line_bot_api.reply_message(event.reply_token,next_templete_button) 
         except:
