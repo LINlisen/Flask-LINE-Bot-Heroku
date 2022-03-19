@@ -99,11 +99,6 @@ def handle_postback(event):
     print(get_postback)
     with open("/app/data.json") as g:
                 s = json.load(g)
-    if(s[user_id]==2):
-        try:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
-        except:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
     if(get_postback == '答對' and s[user_id]!=2):
         try:
             dict={user_id:s[user_id]+1}
@@ -111,9 +106,15 @@ def handle_postback(event):
                 json.dump(dict, h,ensure_ascii=False)
             with open("/app/data.json") as g:
                 s = json.load(g)
-            next_templete_button=Starting_Qusetion(s[user_id])
-            print(next_templete_button)
-            line_bot_api.reply_message(event.reply_token,next_templete_button) 
+            if(s[user_id] == 3):
+                try:
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
+                except:
+                    line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
+            else:
+                next_templete_button=Starting_Qusetion(s[user_id])
+                print(next_templete_button)
+                line_bot_api.reply_message(event.reply_token,next_templete_button) 
         except:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
