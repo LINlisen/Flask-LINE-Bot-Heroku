@@ -83,7 +83,8 @@ def handle_message(event):
         templete_button=Starting_Qusetion(s[user_id])
         try:
             line_bot_api.reply_message(event.reply_token,templete_button) 
-        except:
+        except LineBotApiError as e:
+            print(e)
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
         
 @handler.add(PostbackEvent)
@@ -104,18 +105,21 @@ def handle_postback(event):
             if(s[user_id] == 3):
                 try:
                     line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
-                except:
+                except LineBotApiError as e:
+                    print(e)
                     line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
             else:
                 next_templete_button=Starting_Qusetion(s[user_id])
                 print(next_templete_button)
                 line_bot_api.reply_message(event.reply_token,next_templete_button) 
-        except:
+        except LineBotApiError as e:
+            print(e)
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
     else:
         try:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(get_postback+'! 請重新點擊開始答題')) 
-        except:
+        except LineBotApiError as e:
+            print(e)
             line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
     
