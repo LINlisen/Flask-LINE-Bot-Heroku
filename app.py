@@ -3,7 +3,7 @@ from flask import Flask, abort, request
 
 # https://github.com/line/line-bot-sdk-python
 from linebot import LineBotApi, WebhookHandler
-from linebot.exceptions import InvalidSignatureError
+from linebot.exceptions import InvalidSignatureError,LineBotApiError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,PostbackAction,ButtonsTemplate,PostbackEvent
 
 import json
@@ -18,7 +18,10 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
 
-
+try:
+    profile = line_bot_api.get_profile('<user_id>')
+except LineBotApiError as e:
+    print(e)
 
 @app.route("/", methods=["GET", "POST"])
 def callback():
