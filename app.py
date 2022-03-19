@@ -94,7 +94,7 @@ def handle_postback(event):
     print(get_postback)
     with open("/app/data.json") as g:
                 s = json.load(g)
-    if(get_postback == '答對' and s[user_id]!=2):
+    if(get_postback == '答對'):
         try:
             dict={user_id:s[user_id]+1}
             with open("/app/data.json",'w',encoding='utf-8') as h:
