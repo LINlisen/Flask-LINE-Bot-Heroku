@@ -71,7 +71,7 @@ def handle_message(event):
     with open("/app/data.json") as g:
         s = json.load(g)
     if(user_id not in s.keys()):
-        new_user={"{user_id}":0}
+        new_user={user_id:0}
         s.update(new_user)
         with open("/app/data.json",'w',encoding='utf-8') as h:
             json.dump(s, h,ensure_ascii=False)
