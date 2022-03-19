@@ -14,7 +14,7 @@ with open("/app/question.json") as f:
 with open("/app/data.json") as g:
     s = json.load(g)
 app = Flask(__name__)
-
+profile = ""
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
 
