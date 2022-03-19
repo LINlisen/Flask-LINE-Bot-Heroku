@@ -80,7 +80,7 @@ def Starting_Qusetion(q_num):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     try:
-        profile = get_user_api.get_profile('<user_id>')
+        profile = line_bot_api.get_profile('<user_id>')
         print(profile)
     except LineBotApiError as e:
         print(e)
@@ -103,7 +103,7 @@ def handle_message(event):
 @handler.add(PostbackEvent)
 def handle_postback(event):
     try:
-        profile = get_user_api.get_profile('<user_id>')
+        profile = line_bot_api.get_profile('<user_id>')
         print(profile)
     except LineBotApiError as e:
         print(e)
