@@ -79,17 +79,12 @@ def handle_message(event):
     if get_message == '開始問答':
         with open("/app/data.json") as g:
                 s = json.load(g)
-        if(s[user_id]==2):
-            try:
-                line_bot_api.reply_message(event.reply_token,TextSendMessage('已獲得獎勵！')) 
-            except:
-                line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
-        else:
-            templete_button=Starting_Qusetion(s[user_id])
-            try:
-                line_bot_api.reply_message(event.reply_token,templete_button) 
-            except:
-                line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
+
+        templete_button=Starting_Qusetion(s[user_id])
+        try:
+            line_bot_api.reply_message(event.reply_token,templete_button) 
+        except:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))    
         
 @handler.add(PostbackEvent)
 def handle_postback(event):
