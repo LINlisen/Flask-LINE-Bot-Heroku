@@ -68,6 +68,8 @@ def Starting_Qusetion(q_num):
 def handle_message(event):
     user_id = event.source.user_id
     print("user_id =", user_id)
+    with open("/app/data.json") as g:
+        s = json.load(g)
     if(user_id not in s.keys()):
         new_user={"{user_id}":0}
         s.update(new_user)
