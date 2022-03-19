@@ -17,12 +17,14 @@ app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
-get_user_api = LineBotApi('OG0zc72VvgO/3lMsXVUAV7+F6aNDM0htYXZO8mdvWc/iV2X9HJn2NMO1l7g4hWZ0pM52quGhggQ8ahT7o/pGbxXGLwq3qQz0pX0fx91wJUtWf/vKpxeUHlpkgGxICXKj4zHotkzQayzIyzxdALwXIAdB04t89/1O/w1cDnyilFU=')
+
 try:
-    profile = get_user_api.get_profile('<user_id>')
+    profile = line_bot_api.get_profile('<user_id>')
     print(profile)
 except LineBotApiError as e:
     print(e)
+if(profile == None):
+    print("Did not get username")
 if(profile not in s.keys()):
     new_user={"{profile}":0}
     s.update(new_user)
