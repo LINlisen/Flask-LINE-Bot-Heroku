@@ -1,19 +1,34 @@
 import os
 from flask import Flask, abort, request
-
+from flask_sqlalchemy import SQLAlchemy
 # https://github.com/line/line-bot-sdk-python
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError,LineBotApiError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,PostbackAction,ButtonsTemplate,PostbackEvent
-
 import json
+
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+# Use a service account
+cred = credentials.Certificate('app/dtd-linebot-firebase-adminsdk-s4c8a-182e518a38.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+doc_ref = db.collection(u'User').document(u'QEfFnDfWPM9qv1tCVA9q')
 
 
 with open("/app/question.json") as f:
     q = json.load(f)
-with open("/app/data.json") as g:
-    s = json.load(g)
+
+
+
+
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:z1x2c3v441@IP:3306/db_name"
+
+
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
 
@@ -68,19 +83,18 @@ def Starting_Qusetion(q_num):
 def handle_message(event):
     user_id = event.source.user_id
     print("user_id =", user_id)
-    with open("/app/data.json") as g:
-        s = json.load(g)
-    if(user_id not in s.keys()):
+    docs = doc_ref.get()
+    local_dict=docs.to_dict()
+    if(user_id not in local_dict.keys()):
         new_user={user_id:0}
-        s.update(new_user)
-        with open("/app/data.json",'w',encoding='utf-8') as h:
-            json.dump(s, h,ensure_ascii=False)
+        local_dict.update(new_user)
+        doc_ref.set(local_dict)
     get_message = event.message.text
     if get_message == '開始問答':
-        with open("/app/data.json") as g:
-                s = json.load(g)
-
-        templete_button=Starting_Qusetion(s[user_id])
+        
+        docs = doc_ref.get()
+        local_dict=docs.to_dict()
+        templete_button=Starting_Qusetion(local_dict[user_id])
         try:
             line_bot_api.reply_message(event.reply_token,templete_button) 
         except LineBotApiError as e:
@@ -93,23 +107,22 @@ def handle_postback(event):
     print("user_id =", user_id)
     get_postback = event.postback.data
     print(get_postback)
-    with open("/app/data.json") as g:
-                s = json.load(g)
+    docs = doc_ref.get()
+    local_dict=docs.to_dict()
     if(get_postback == '答對'):
         try:
-            dict={user_id:s[user_id]+1}
-            with open("/app/data.json",'w',encoding='utf-8') as h:
-                json.dump(dict, h,ensure_ascii=False)
-            with open("/app/data.json") as g:
-                s = json.load(g)
-            if(s[user_id] == 3):
+            local_dict[user_id]=local_dict[user_id]+1
+            doc_ref.set(local_dict)
+            docs = doc_ref.get()
+            local_dict=docs.to_dict()
+            if(local_dict[user_id] == 3):
                 try:
                     line_bot_api.reply_message(event.reply_token,TextSendMessage('獲得獎勵！'))
                 except LineBotApiError as e:
                     print(e)
                     line_bot_api.reply_message(event.reply_token,TextSendMessage('發生錯誤！'))
             else:
-                next_templete_button=Starting_Qusetion(s[user_id])
+                next_templete_button=Starting_Qusetion(local_dict[user_id])
                 print(next_templete_button)
                 line_bot_api.reply_message(event.reply_token,next_templete_button) 
         except LineBotApiError as e:
